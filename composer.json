@@ -1,0 +1,26 @@
+{
+    "name": "adlurfm/yii2-dataedit",
+    "description": "Single data editor widget for Yii2",
+    "type": "library",
+    "minimum-stability": "dev",
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Adlurfm\\Yii2Dataedit\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adlur Rahman",
+            "email": "adlurfm@gmail.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    }
+}
