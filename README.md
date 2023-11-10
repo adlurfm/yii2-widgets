@@ -19,6 +19,24 @@ Single Data editor widget for Yii2
 - yiisoft/yii2-bootstrap4
 - kartik-v/yii2-widget-datepicker
 
+### Widget Options
+
+| Option            | Type | Mandatory | Descriptions |
+|----------         |--------------|-|-|
+| title             |string|Optional (Default : "Edit {attribute label} :")| Modal Title
+| model             |Active Record|Conditional (Required if value and primary_key_value is empty| Yii2 Active Record Model |
+| attribute         |string|Mandatory| Attribute Name |
+| value             |mix|Conditional (Required if model value is empty)| Attribute Value |
+| primary_key_value |mix|Conditional (Required if model value is empty)| Table Primary Key Value |
+| type              | TYPE_TEXTBOX, TYPE_TEXTAREA, TYPE_DATETIME, TYPE_NUMBER, TYPE_DROPDOWN | Optional (Default : TYPE_TEXTBOX) | Input type|
+| display_type      |DISPLAY_TYPE_BUTTON, DISPLAY_TYPE_BUTTON_WITH_VALUE, DISPLAY_TYPE_UNDERLINE, ~~DISPLAY_TYPE_INLINE~~| Optional (Default : DISPLAY_TYPE_BUTTON)|How to display|
+| input_options     |array|Optional|set custom input options if needed|
+| dropdown_items    |array|Conditional (Required if type = TYPE_DROPDOWN)| List of dropdown items|
+| number_min        |integer|Optional (Default : 0)| minimum number|
+| number_max        |integer|Optional (Default : 999)| maximum number|
+| button_icon       |string|Optional (Default : \<i class="fa fa-pencil"></i>)| button icon, default is using FontAwesome 5.
+| button_style      |string|Optional (Default :"border-bottom:1px dotted;")| Set custom button style|
+
 ### Step 1 : in View
 
 - Example Using Model
