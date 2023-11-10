@@ -1,8 +1,10 @@
 <?php
-namespace app\widgets;
+
+namespace adlurfm\widgets;
 
 use yii\base\Widget;
 use yii\helpers\Html;
+
 
 /**
  * @author Adlur Rahman Ali Omar <adlurfm@gmail.com>
@@ -15,20 +17,36 @@ class DataEdit extends Widget
     const TYPE_NUMBER = 'number';
     const TYPE_DROPDOWN = 'dropdown';
 
-    const DISPLAY_TYPE_BUTTON = 'button';
-    const DISPLAY_TYPE_UNDERLINE = 'underline';
+    
+    //TODO const MODE_AJAX = 'ajax';
+    //TODO const MODE_NORMAL = 'normal';
 
+    const DISPLAY_TYPE_BUTTON = 'button';
+    const DISPLAY_TYPE_BUTTON_WITH_VALUE = 'button-with-value';
+    const DISPLAY_TYPE_UNDERLINE = 'underline';
+    const DISPLAY_TYPE_INLINE = 'inline';
+
+    public $title = null;
     public $model = null;
-    public $title = "Edit :";
-    public $type = self::TYPE_TEXTBOX;
     public $attribute = null;
     public $value = null;
     public $primary_key_value = null;
-    public $dropdown_items = []; //for dropdown
-    public $number_min = 0; //for number
-    public $number_max = 999; //for number
+    public $type = self::TYPE_TEXTBOX;
     public $display_type = self::DISPLAY_TYPE_BUTTON;
     public $input_options = null; //any input options
+    
+    //for dropdown
+    public $dropdown_items = []; 
+
+    //for numbers
+    public $number_min = 0; //for number
+    public $number_max = 999; //for number
+    
+    //button options
+    public $button_icon = '<i class="fa fa-pencil"></i>';
+    public $button_style = 'border-bottom:1px dotted;'; //style
+
+    //TODOpublic $mode = self::MODE_NORMAL; //TODO
 
     // Template variables <@modal_id@> = modal id, <@model_title@> = title, <@model_body@> = content, <@model_footer@>
     public $bootstrap_modal_template = '<div class="modal fade" id="<@modal_id@>" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -46,6 +64,9 @@ class DataEdit extends Widget
         </div>
         </div>';
 
+
+    public $inline_template = '<form method="post"><@model_body@></form>';
+
     /**
      * {@inheritdoc}
      */
@@ -53,32 +74,66 @@ class DataEdit extends Widget
     {
         $this->setId("modal_de_" . uniqid());
 
+        //set value and primary key value if model data is given
         if($this->model!=null){
             $this->value = $this->model->getAttribute($this->attribute);
             $this->primary_key_value = $this->model->primaryKey;
         }
 
+        //set default title
+        if($this->title==null){
+            $this->title = "Edit :";
+            if($this->model!=null){
+                $label = $this->model->getAttributeLabel($this->attribute);
+                $this->title = "Edit $label:";
+            }
+        }
+
         echo $this->renderHtml();
     }
 
-    //Render input html
+    
     protected function renderHtml()
     {
 
-        $result = '';
-        $content = '';
+        $result = $this->RenderValue();
 
-        if ($this->display_type == self::DISPLAY_TYPE_BUTTON) {
-            $result = Html::a('<i class="fa fa-pencil" aria-hidden="true"></i>', '#', [
+        if($this->display_type == self::DISPLAY_TYPE_INLINE)
+        {
+            $result .= $this->RenderInline();
+        }else{
+            $result .= $this->RenderBootstrapModal();
+        }
+
+        return $result;
+    }
+
+    private function RenderValue()
+    {
+        if ($this->display_type == self::DISPLAY_TYPE_BUTTON_WITH_VALUE) {
+            return '<span>'.$this->value.'</span>' . 
+                Html::a($this->button_icon, '#', [
                 'class' => 'px-1 mx-1',
-                'style' => 'border-bottom:1px dotted;',
+                'style' => $this->button_style,
                 'data' => [
                     'toggle' => 'modal',
                     'target' => '#' . $this->getId(),
                 ],
             ]);
-        } elseif ($this->display_type == self::DISPLAY_TYPE_UNDERLINE) {
-            $result = Html::a($this->value, '#', [
+        } 
+        elseif ($this->display_type == self::DISPLAY_TYPE_BUTTON) {
+            return Html::a($this->button_icon, '#', [
+                'class' => 'px-1 mx-1',
+                'style' => $this->button_style,
+                'data' => [
+                    'toggle' => 'modal',
+                    'target' => '#' . $this->getId(),
+                ],
+            ]);
+        }
+        
+        elseif ($this->display_type == self::DISPLAY_TYPE_UNDERLINE) {
+            return Html::a($this->value, '#', [
                 'class' => '',
                 'style' => 'border-bottom:1px dotted;',
                 'data' => [
@@ -88,62 +143,80 @@ class DataEdit extends Widget
             ]);
         }
 
-        $content .= $this->RenderInput();
-
-        $content .= Html::hiddenInput("dataedit[id]", $this->primary_key_value);
-        $content .= Html::hiddenInput("dataedit[attr]", $this->attribute);
-
-        $footer = '';
-        $footer .= Html::a('<i class="far fa-times-circle"></i> CANCEL', '#', ["class" => "btn btn-outline-danger btn-xs m-2", "data-dismiss" => "modal"]);
-        $footer .= Html::submitButton('<i class="far fa-check-circle"></i> SAVE', ["class" => "btn btn-outline-success btn-xs m-2"]);
-
-        $result .= str_replace(['<@modal_id@>', '<@model_title@>', '<@model_body@>', '<@model_footer@>'], [
-            $this->getId(),
-            $this->title,
-            $content,
-            $footer,
-        ], $this->bootstrap_modal_template);
-
-        return $result;
+        return '';
     }
 
-    public function RenderInput()
+    private function RenderBootstrapModal()
+    {
+        $body = $this->RenderInput();
+        $body .= Html::hiddenInput("dataedit[id]", $this->primary_key_value);
+        $body .= Html::hiddenInput("dataedit[attr]", $this->attribute);
+        
+        $footer = Html::a('<i class="far fa-times-circle"></i> CANCEL', '#', ["class" => "btn btn-outline-danger btn-xs m-2", "data-dismiss" => "modal"]);
+        $footer .= Html::submitButton('<i class="far fa-check-circle"></i> SAVE', ["class" => "btn btn-outline-success btn-xs m-2"]);
+
+        return str_replace(['<@modal_id@>', '<@model_title@>', '<@model_body@>', '<@model_footer@>'], [
+            $this->getId(),
+            $this->title,
+            $body,
+            $footer,
+        ], $this->bootstrap_modal_template);
+    }
+
+    private function RenderInline()
+    {
+        $body = $this->RenderInput();
+        $body .= Html::hiddenInput("dataedit[id]", $this->primary_key_value);
+        $body .= Html::hiddenInput("dataedit[attr]", $this->attribute);
+        
+        return str_replace('<@model_body@>', $body, $this->inline_template);
+    }
+
+
+    private function RenderInput()
     {
         //----------------------------------------------------------------
+        $class = 'form-control';
+        $style = '';
+        if($this->display_type == self::DISPLAY_TYPE_INLINE){
+            $class = '';
+            $style = 'display:none;';
+        }
+
         if ($this->type == self::TYPE_DATETIME) {
 
-        /*  $content .= DateTimePicker::widget([
-        'name' => 'dataedit_value',
-        'minuteStep'=>5,
-        'current_value'=>$this->value,
-        'double_line'=>true
-        ]); */
-            return '';
+            return DateTimePicker::widget([
+                'name' => "dataedit[val]",
+                'minuteStep'=>5,
+                'current_value'=>$this->value,
+                'double_line'=>true
+            ]); 
 
         } elseif ($this->type == self::TYPE_TEXTAREA) {
 
-            $input_options = $this->input_options ?? ['class' => 'form-control', 'rows' => 3];
+            $input_options = $this->input_options ?? ['class' => $class, 'style'=>$style, 'rows' => 3];
             return Html::textarea("dataedit[val]", $this->value, $input_options);
 
         } elseif ($this->type == self::TYPE_TEXTBOX) {
 
-            $input_options = $this->input_options ?? ['class' => 'form-control'];
+            $input_options = $this->input_options ?? ['class' => $class, 'style'=>$style];
             return Html::textInput("dataedit[val]", $this->value, $input_options);
 
         } elseif ($this->type == self::TYPE_DROPDOWN) {
 
-            $input_options = $this->input_options ?? ['class' => 'form-control'];
+            $input_options = $this->input_options ?? ['class' => $class, 'style'=>$style];
             return Html::dropDownList("dataedit[val]", $this->value, $this->dropdown_items, $input_options);
 
         } elseif ($this->type == self::TYPE_NUMBER) {
 
-            $input_options = $this->input_options ?? ['class' => 'form-control', 'type' => 'number', 'min' => $this->number_min, 'max' => $this->number_max];
+            $input_options = $this->input_options ?? ['class' => $class, 'style'=>$style, 'type' => 'number', 'min' => $this->number_min, 'max' => $this->number_max];
             return Html::textInput("dataedit[val]", $this->value, $input_options);
 
         }
         //----------------------------------------------------------------
     }
 
+    
     //Check if have data edit post
     public static function GetPostData()
     {
