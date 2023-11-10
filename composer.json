@@ -1,7 +1,7 @@
 {
     "name": "adlurfm/yii2-widgets",
     "description": "Some widgets for Yii2",
-    "type": "library",
+    "type": "yii2-extension",
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.4",
@@ -11,7 +11,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "adlurfm\\yii2-widgets\\": "src/widgets"
+            "adlurfm\\yii2-widgets\\": "src/"
         }
     },
     "authors": [

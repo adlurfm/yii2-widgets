@@ -13,7 +13,7 @@ class DataEdit extends Widget
 {
     const TYPE_TEXTBOX = 'textbox';
     const TYPE_TEXTAREA = 'textarea';
-    const TYPE_DATETIME = 'datetime'; //TODO
+    const TYPE_DATETIME = 'datetime';
     const TYPE_NUMBER = 'number';
     const TYPE_DROPDOWN = 'dropdown';
 
@@ -46,7 +46,7 @@ class DataEdit extends Widget
     public $button_icon = '<i class="fa fa-pencil"></i>';
     public $button_style = 'border-bottom:1px dotted;'; //style
 
-    //TODOpublic $mode = self::MODE_NORMAL; //TODO
+    //TODO public $mode = self::MODE_NORMAL; 
 
     // Template variables <@modal_id@> = modal id, <@model_title@> = title, <@model_body@> = content, <@model_footer@>
     public $bootstrap_modal_template = '<div class="modal fade" id="<@modal_id@>" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
