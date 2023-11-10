@@ -4,6 +4,7 @@
     "type": "library",
     "minimum-stability": "dev",
     "require": {
+        "php": ">=7.4",
         "yiisoft/yii2": "~2.0.0",
         "kartik-v/yii2-widget-datepicker": "@dev"
     },
