@@ -11,7 +11,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "adlurfm\\yii2-widgets\\": "src/"
+            "adlurfm\\widgets\\": "src/"
         }
     },
     "authors": [
