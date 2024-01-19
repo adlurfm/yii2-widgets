@@ -15,6 +15,7 @@ class DateTimePicker extends InputWidget
     public $minuteStep = 1;
     public $error = '';
     public $startDate = '0'; //minimun date is today
+    public $endDate = null;
     public $class = 'form-control form-control-sm';
     public $_id = '123';
     public $current_value = null;
@@ -99,7 +100,8 @@ class DateTimePicker extends InputWidget
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
-                    'startDate' => $this->startDate
+                    'startDate' => $this->startDate,
+                    'endDate' => $this->endDate
                 ],
                 'options'=>[
                     'class'=>$this->class,
@@ -140,7 +142,8 @@ class DateTimePicker extends InputWidget
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
-                    'startDate' => $this->startDate
+                    'startDate' => $this->startDate,
+                    'endDate' => $this->endDate
                 ],
                 'options'=>[
                     'class'=>$this->class,
