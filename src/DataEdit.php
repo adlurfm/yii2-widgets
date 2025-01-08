@@ -186,8 +186,7 @@ class DataEdit extends Widget
         if ($this->type == self::TYPE_DATETIME) {
 
             return DateTimePicker::widget([
-                'name' => "dataedit[val]",
-                'minuteStep'=>5,
+                'name' => "dataedit_date_value",
                 'current_value'=>$this->value,
                 'double_line'=>true
             ]); 
@@ -223,6 +222,13 @@ class DataEdit extends Widget
         if (isset($_POST['dataedit'])) {
             $de = $_POST['dataedit'];
             if (!empty($de)) {
+
+                $dataedit_date_value = (isset($_POST['dataedit_date_value'])) ? $_POST['dataedit_date_value'] : null;
+
+                if(!empty($dataedit_date_value)){
+                    $de["val"] = $dataedit_date_value;
+                }
+                
                 if (!empty($de["id"]) && !empty($de["attr"]) && !empty($de["val"])) {
                     return (object) $de;
                 }
