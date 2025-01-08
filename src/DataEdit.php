@@ -185,11 +185,16 @@ class DataEdit extends Widget
 
         if ($this->type == self::TYPE_DATETIME) {
 
-            return DateTimePicker::widget([
+            $dt_options = [
                 'name' => "dataedit_date_value",
                 'current_value'=>$this->value,
-                'double_line'=>true
-            ]); 
+                'double_line'=>true,
+                'startDate'=>null
+            ];
+
+            $input_options = !empty($this->input_options) ? array_merge($dt_options, $this->input_options) : $dt_options;
+
+            return DateTimePicker::widget($input_options);
 
         } elseif ($this->type == self::TYPE_TEXTAREA) {
 
