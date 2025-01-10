@@ -20,6 +20,8 @@ class DateTimePicker extends InputWidget
     public $_id = '123';
     public $current_value = null;
     public $double_line = false;
+    public $readonly = false;
+    
     private $current_date = null;
     private $current_hour = '00';
     private $current_minute = '00';
@@ -62,10 +64,12 @@ class DateTimePicker extends InputWidget
 
         $result = '';
         
+        if($this->readonly){
+            return $this->renderReadOnly();
+        }
+        
         if ($this->hasModel()) {
             
-            
-
             $errorList = $this->model->getErrors($this->attribute);
             if(!empty($errorList)) $this->error = $errorList[0]; //get only the first error
 
@@ -75,18 +79,9 @@ class DateTimePicker extends InputWidget
             $this->current_value = $this->model[$this->attribute];
             $this->setCurrentValue();
 
-            /* $current_date = null;
-            $current_hour = '00';
-            $current_minute = '00';
-            if(!empty($current_value)) {
-                $current_value = date('Y-m-d H:i',strtotime($current_value));
-                $current_date = date('Y-m-d',strtotime($current_value));
-                $current_hour = date('H',strtotime($current_value));
-                $current_minute = date('i',strtotime($current_value));
-            } */
-
             $result .= '<div class="row">';
             $lbl = 'position: absolute;left: 1.5em;font-size: 8px;top: 0.2em;';
+            
             //date input
             $result .= '<div class="'.($this->double_line?'col-12 mb-2':'col-6').'">';
             $result .= Html::hiddenInput(Html::getInputName($this->model, $this->attribute),$this->current_value,['id' => $this->_id.$this->name]);
@@ -174,6 +169,34 @@ class DateTimePicker extends InputWidget
         return $result;
     }
 
+    private function renderReadOnly(){
+
+        $date_value = '';
+        $minute_value = '';
+        $hour_value = '';
+    
+        if(!empty($this->current_value)){
+            $datevalue = new \DateTime($this->current_value);
+            $date_value = $datevalue->format('Y-m-d');
+            $minute_value = (string)$datevalue->format('i');
+            $hour_value = (string)$datevalue->format('H');
+        }
+    
+        return '<div class="row">
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" value="'.$date_value.'" readonly>
+                    </div>
+                    <div class="col-3">
+                        <span style="position: absolute;left: 1.5em;font-size: 8px;top: 0.2em;">Hour</span>
+                        <input type="text" class="form-control form-control-sm text-center"" value="'.$hour_value.'" readonly>
+                    </div>
+                    <div class="col-3">
+                        <span style="position: absolute;left: 1.5em;font-size: 8px;top: 0.2em;">Minute</span>
+                        <input type="text" class="form-control form-control-sm text-center" value="'.$minute_value.'" readonly>
+                    </div>
+                </div>';
+    }
+    
     private function setCurrentValue(){
         $this->current_date = null;
         $this->current_hour = '00';
