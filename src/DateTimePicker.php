@@ -174,12 +174,14 @@ class DateTimePicker extends InputWidget
         $date_value = '';
         $minute_value = '';
         $hour_value = '';
+        $hidden_input_val = '';
     
         if(!empty($this->current_value)){
             $datevalue = new \DateTime($this->current_value);
             $date_value = $datevalue->format('Y-m-d');
             $minute_value = (string)$datevalue->format('i');
             $hour_value = (string)$datevalue->format('H');
+            $hidden_input_val = '<input type="hidden" name="'.$this->name.'" value="'.$datevalue->format('Y-m-d H:i').'">';
         }
     
         return '<div class="row">
@@ -193,6 +195,7 @@ class DateTimePicker extends InputWidget
                     <div class="col-3">
                         <span style="position: absolute;left: 1.5em;font-size: 8px;top: 0.2em;">Minute</span>
                         <input type="text" class="form-control form-control-sm text-center" value="'.$minute_value.'" readonly>
+                        '.$hidden_input_val.'
                     </div>
                 </div>';
     }
