@@ -228,9 +228,10 @@ class DataEdit extends Widget
             $de = $_POST['dataedit'];
             if (!empty($de)) {
 
-                $dataedit_date_value = (isset($_POST['dataedit_date_value'])) ? $_POST['dataedit_date_value'] : null;
-                
-                $de["val"] = $dataedit_date_value;
+                if(isset($_POST['dataedit_date_value'])){
+                    $dataedit_date_value = (isset($_POST['dataedit_date_value'])) ? $_POST['dataedit_date_value'] : null;
+                    $de["val"] = $dataedit_date_value;
+                }
                 
                 if (!empty($de["id"]) && !empty($de["attr"])) {
                     return (object) $de;
